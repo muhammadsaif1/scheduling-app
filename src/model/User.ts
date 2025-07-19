@@ -16,6 +16,8 @@ export interface User extends Document {
   rating?: number;
   totalReviews?: number;
   createdAt: Date;
+  verifyCode: string;
+  verifyCodeExpiry: Date;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -32,24 +34,28 @@ const UserSchema: Schema<User> = new Schema({
     match: [/.+\@.+\..+/, "Please use a valid email address"],
   },
   password: { type: String, required: [true, "Password is required"] },
-
   role: {
     type: String,
     enum: ["admin", "expert", "client"],
     required: true,
     default: "client",
   },
-
   isVerified: {
     type: Boolean,
     default: false,
   },
-
+  verifyCode: {
+    type: String,
+    required: [true, "Verfication code is required"],
+  },
+  verifyCodeExpiry: {
+    type: Date,
+    required: [true, "Verfication code Expiry Date is required"],
+  },
   profileImage: {
     type: String,
     default: "", // Optional profile image URL
   },
-
   // Expert-only fields (optional for client/admin)
   bio: {
     type: String,
@@ -71,7 +77,6 @@ const UserSchema: Schema<User> = new Schema({
     type: Number,
     default: 0,
   },
-
   createdAt: {
     type: Date,
     required: true,
